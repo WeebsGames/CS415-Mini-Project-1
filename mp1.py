@@ -1,12 +1,17 @@
 ## answers to questions 
 #
-# 1. 
-#
-#
-#
-#
-#
-
+# Q1. 
+# 1. the goal of computer vision is to understand the story a picture is telling
+# 2. some examples of computer vision are: license plate readers, motion capture,
+#    and robotics
+# 3. an image is a matrix of 3 element arrays. it contains 3 ints that correspond
+#    to the RGB values of the pixel
+# Q2.
+# 1. replace each pixel by a linear combination
+# 2. convolution and correlation are both operations where a kernel is applied
+#    to an image, however the kernel in convolution is flipped horizontally
+#    and vertically
+# Q3 work is in the file called Q3.png
 
 ## code for convolution and mean filtering
 
@@ -22,9 +27,31 @@ img = cv.imread(r'seele.png', cv.IMREAD_GRAYSCALE)
 print(len(img))
 px = img[100,100]
 print(px)
-kern = np.ones((3,3))
+kern = np.array([
+  [0, -1, 0],
+  [-1, 5, -1],
+  [0, -1, 0]
+])
 print(kern)
 print(img[0,0])
+
+bigkern = np.array([
+    [0,0,-1,0,0],
+    [0,-1,-1,-1,0],
+    [-1,-1,15,-1,-1],
+    [0,-1,-1,-1,0],
+    [0,0,-1,0,0]
+])
+
+biggestkern = np.array([
+    [0,0,0,-1,0,0,0],
+    [0,0,-1,-1,-1,0,0],
+    [0,-1,-1,-1,-1,-1,0],
+    [-1,-1,-1,25,-1,-1,-1],
+    [0,-1,-1,-1,-1,-1,0],
+    [0,0,-1,-1,-1,0,0],
+    [0,0,0,-1,0,0,0]
+])
 
 def convolution(img, kern):
     print("starting convolution")
@@ -58,6 +85,15 @@ def meanfilter(img, kern):
             result[i, j] = result[i, j]/(len(kern) * len(kern))
     return result
 
+src = cv.imread(r'seele.png')
+gaussimg = cv.filter2D(src, -1, kern)
+cv.imwrite(r'gaussimg.png',gaussimg)
+
+gaussimg = cv.filter2D(src, -1, bigkern)
+cv.imwrite(r'biggaussimg.png',gaussimg)
+
+gaussimg = cv.filter2D(src, -1, biggestkern)
+cv.imwrite(r'biggestgaussimg.png',gaussimg)
 
 diffimg = convolution(img, kern)
 cv.imwrite(r'newimgconv.png',diffimg)
