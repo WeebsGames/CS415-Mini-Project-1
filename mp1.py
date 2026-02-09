@@ -23,7 +23,7 @@ print(type(a))
 print(a.shape)
 print(a[0], a[1], a[2])
 
-img = cv.imread(r'seele.png', cv.IMREAD_GRAYSCALE)
+img = cv.imread(r'lena.png', cv.IMREAD_GRAYSCALE)
 print(len(img))
 px = img[100,100]
 print(px)
@@ -85,7 +85,7 @@ def meanfilter(img, kern):
             result[i, j] = result[i, j]/(len(kern) * len(kern))
     return result
 
-src = cv.imread(r'seele.png')
+src = cv.imread(r'lena.png')
 gaussimg = cv.filter2D(src, -1, kern)
 cv.imwrite(r'gaussimg.png',gaussimg)
 
@@ -97,6 +97,8 @@ cv.imwrite(r'biggestgaussimg.png',gaussimg)
 
 diffimg = convolution(img, kern)
 cv.imwrite(r'newimgconv.png',diffimg)
+
+# my convolution does not have the same result as cv.filter2D
 
 meanimg = meanfilter(img, kern)
 cv.imwrite(r'newimgmean.png',meanimg)
