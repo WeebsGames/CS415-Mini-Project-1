@@ -66,6 +66,24 @@ def convolution(img, kern):
                         result[i, j] = kern[u, v] * img[i-u, j-v]
     return result
 
+def convolutionrgb(img, kern):
+    print("starting convolutionrgb")
+    k = (int)(len(kern)/2)
+    result = img.copy()
+    for i in range(len(img)):
+        for j in range(len(img[0])):
+            for u in range(-k, k+1):
+                for v in range(-k,k+1):
+                    if(i-u < 0 or j-v < 0 or i-u >= len(img) or j-v >= len(img)):
+                        result[i, j, 0] = kern[u, v] * 0
+                        result[i, j, 1] = kern[u, v] * 0
+                        result[i, j, 2] = kern[u, v] * 0
+                    else:
+                        result[i, j, 0] = kern[u, v] * img[i-u, j-v, 0] * 3
+                        result[i, j, 1] = kern[u, v] * img[i-u, j-v, 1] * 3
+                        result[i, j, 2] = kern[u, v] * img[i-u, j-v, 2] * 3
+    return result
+
 def meanfilter(img, size):
     print("starting mean filtering")
     k = (int)(size/2)
@@ -110,17 +128,24 @@ def gkern(l=5, sig=1.):
 
 lena = cv.imread(r'lena.png')
 
-gaussimg = cv.filter2D(lena, -1, kern)
-cv.imwrite(r'test.png',gaussimg)
+testimg = cv.filter2D(lena, -1, kern)
+cv.imwrite(r'test.png',testimg)
 
-gaussimg = cv.filter2D(lena, -1, bigkern)
-cv.imwrite(r'tes2.png',gaussimg)
+testimg = cv.filter2D(lena, -1, bigkern)
+cv.imwrite(r'tes2.png',testimg)
 
-gaussimg = cv.filter2D(lena, -1, biggestkern)
-cv.imwrite(r'test3.png',gaussimg)
+testimg = cv.filter2D(lena, -1, biggestkern)
+cv.imwrite(r'test3.png',testimg)
 
 diffimg = convolution(test, kern)
 cv.imwrite(r'test4.png',diffimg)
+
+
+g3 = gkern(3, 1)
+# print(g3)
+gaussimg = convolutionrgb(lena, g3)
+cv.imwrite(r'gaussimg3x3.png', gaussimg)
+cv.imwrite(r'filter2D3x3.png', cv.filter2D(lena, -1, g3))
 
 # my convolution does not have the same result as cv.filter2D
 
