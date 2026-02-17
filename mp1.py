@@ -84,24 +84,46 @@ def meanfilter(img, size):
             result[i, j] = result[i, j]/(size * size)
     return result
 
-def gaussian_kernel(x, y, sigma=1.0):
-    return np.exp(-np.linalg.norm(x - y)**2 / (2 * sigma**2))
+def medianfilter(img, size):
+    print("starting median filtering")
+    k = (int)(size/2)
+    medlist = []
+    result = np.zeros((len(img), len(img[0])))
+    for i in range(len(img)):
+        for j in range(len(img[0])):
+            for u in range(-k, k+1):
+                for v in range(-k,k+1):
+                    if(i-u < 0 or j-v < 0 or i-u >= len(img) or j-v >= len(img[0])):
+                        medlist.append(0)
+                    else:
+                        medlist.append(img[i-u, j-v])
+            medlist.sort()
+            result[i, j] = medlist[len(medlist)//2]
+            medlist = []
+    return result
+
+def gkern(l=5, sig=1.):
+    ax = np.linspace(-(l - 1) / 2., (l - 1) / 2., l)
+    gauss = np.exp(-0.5 * np.square(ax) / np.square(sig))
+    kernel = np.outer(gauss, gauss)
+    return kernel / np.sum(kernel)
 
 lena = cv.imread(r'lena.png')
 
 gaussimg = cv.filter2D(lena, -1, kern)
-cv.imwrite(r'gaussimg.png',gaussimg)
+cv.imwrite(r'test.png',gaussimg)
 
 gaussimg = cv.filter2D(lena, -1, bigkern)
-cv.imwrite(r'biggaussimg.png',gaussimg)
+cv.imwrite(r'tes2.png',gaussimg)
 
 gaussimg = cv.filter2D(lena, -1, biggestkern)
-cv.imwrite(r'biggestgaussimg.png',gaussimg)
+cv.imwrite(r'test3.png',gaussimg)
 
 diffimg = convolution(test, kern)
-cv.imwrite(r'newimgconv.png',diffimg)
+cv.imwrite(r'test4.png',diffimg)
 
 # my convolution does not have the same result as cv.filter2D
+
 
 art = cv.imread(r'art.png', cv.IMREAD_GRAYSCALE)
 print(len(art))
@@ -117,6 +139,20 @@ cv.imwrite(r'newimgmean7x7.png', meanimg)
 
 meanimg = meanfilter(art, 9)
 cv.imwrite(r'newimgmean9x9.png', meanimg)
+
+
+medimg = medianfilter(art, 3)
+cv.imwrite(r'newimgmed3x3.png', medimg)
+
+medimg = medianfilter(art, 5)
+cv.imwrite(r'newimgmed5x5.png', medimg)
+
+medimg = medianfilter(art, 7)
+cv.imwrite(r'newimgmed7x7.png', medimg)
+
+medimg = medianfilter(art, 9)
+cv.imwrite(r'newimgmed9x9.png', medimg)
+
 white = np.ones((3,3))
 for i in range(0,3):
     for j in range(0,3):
