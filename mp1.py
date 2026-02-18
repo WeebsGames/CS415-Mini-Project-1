@@ -11,7 +11,6 @@
 # 2. convolution and correlation are both operations where a kernel is applied
 #    to an image, however the kernel in convolution is flipped horizontally
 #    and vertically
-# Q3 work is in the file called Q3.png
 
 ## code for convolution and mean filtering
 
@@ -61,9 +60,9 @@ def convolution(img, kern):
             for u in range(-k, k+1):
                 for v in range(-k,k+1):
                     if(i-u < 0 or j-v < 0 or i-u >= len(img) or j-v >= len(img)):
-                        result[i, j] = kern[u, v] * 0
+                        result[i, j] += kern[u, v] * 0
                     else:
-                        result[i, j] = kern[u, v] * img[i-u, j-v]
+                        result[i, j] += kern[u, v] * img[i-u, j-v]
     return result
 
 def convolutionrgb(img, kern):
@@ -72,16 +71,17 @@ def convolutionrgb(img, kern):
     result = img.copy()
     for i in range(len(img)):
         for j in range(len(img[0])):
+            result[i, j] = [0,0,0]
             for u in range(-k, k+1):
                 for v in range(-k,k+1):
                     if(i-u < 0 or j-v < 0 or i-u >= len(img) or j-v >= len(img)):
-                        result[i, j, 0] = kern[u, v] * 0
-                        result[i, j, 1] = kern[u, v] * 0
-                        result[i, j, 2] = kern[u, v] * 0
+                        result[i, j, 0] += kern[u, v] * 0
+                        result[i, j, 1] += kern[u, v] * 0
+                        result[i, j, 2] += kern[u, v] * 0
                     else:
-                        result[i, j, 0] = kern[u, v] * img[i-u, j-v, 0] * 3
-                        result[i, j, 1] = kern[u, v] * img[i-u, j-v, 1] * 3
-                        result[i, j, 2] = kern[u, v] * img[i-u, j-v, 2] * 3
+                        result[i, j, 0] += kern[u, v] * img[i-u, j-v, 0]
+                        result[i, j, 1] += kern[u, v] * img[i-u, j-v, 1]
+                        result[i, j, 2] += kern[u, v] * img[i-u, j-v, 2]
     return result
 
 def meanfilter(img, size):
@@ -147,12 +147,26 @@ gaussimg = convolutionrgb(lena, g3)
 cv.imwrite(r'gaussimg3x3.png', gaussimg)
 cv.imwrite(r'filter2D3x3.png', cv.filter2D(lena, -1, g3))
 
-# my convolution does not have the same result as cv.filter2D
+g5 = gkern(5, 1)
+gaussimg = convolutionrgb(lena, g5)
+cv.imwrite(r'gaussimg5x5.png', gaussimg)
+cv.imwrite(r'filter2D5x5.png', cv.filter2D(lena, -1, g5))
 
+g7 = gkern(7, 1)
+gaussimg = convolutionrgb(lena, g7)
+cv.imwrite(r'gaussimg7x7.png', gaussimg)
+cv.imwrite(r'filter2D7x7.png', cv.filter2D(lena, -1, g7))
+
+g9 = gkern(9, 1)
+gaussimg = convolutionrgb(lena, g9)
+cv.imwrite(r'gaussimg9x9.png', gaussimg)
+cv.imwrite(r'filter2D9x9.png', cv.filter2D(lena, -1, g9))
+
+# my convolution has the same result as filter2D when comparing the 3x3 kernel. however the other kernels don't produce the same result. it seems like filter2d does not produce a different result when the kernel is a different size. 
 
 art = cv.imread(r'art.png', cv.IMREAD_GRAYSCALE)
-print(len(art))
-print(len(art[0]))
+# print(len(art))
+# print(len(art[0]))
 meanimg = meanfilter(art, 3)
 cv.imwrite(r'newimgmean3x3.png', meanimg)
 
