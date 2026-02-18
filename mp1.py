@@ -1,18 +1,4 @@
-## answers to questions 
-#
-# Q1. 
-# 1. the goal of computer vision is to understand the story a picture is telling
-# 2. some examples of computer vision are: license plate readers, motion capture,
-#    and robotics
-# 3. an image is a matrix of 3 element arrays. it contains 3 ints that correspond
-#    to the RGB values of the pixel
-# Q2.
-# 1. replace each pixel by a linear combination
-# 2. convolution and correlation are both operations where a kernel is applied
-#    to an image, however the kernel in convolution is flipped horizontally
-#    and vertically
-
-## code for convolution and mean filtering
+## code for convolution, mean, and median filtering
 
 import numpy as np
 import cv2 as cv
@@ -162,7 +148,10 @@ gaussimg = convolutionrgb(lena, g9)
 cv.imwrite(r'gaussimg9x9.png', gaussimg)
 cv.imwrite(r'filter2D9x9.png', cv.filter2D(lena, -1, g9))
 
-# my convolution has the same result as filter2D when comparing the 3x3 kernel. however the other kernels don't produce the same result. it seems like filter2d does not produce a different result when the kernel is a different size. 
+# my convolution has the same result as filter2D when comparing the 3x3 kernel. 
+# however the other kernels don't produce the same result. 
+# it seems like filter2d does not produce a different result when the kernel is a different size.
+# my solution makes the picture blurrier as the size of the kernel increases.
 
 art = cv.imread(r'art.png', cv.IMREAD_GRAYSCALE)
 # print(len(art))
